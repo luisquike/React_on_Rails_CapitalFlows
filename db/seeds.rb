@@ -5,3 +5,6 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+ Record.create title: 'Record 1', date: Date.today, amount: 500
+ Record.create title: 'Record 2', date: Date.today, amount: -100
