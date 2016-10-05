@@ -7,6 +7,10 @@ var RecordTable = React.createClass({
     this.props.handleUpdateRecord(old_record, record);
   },
 
+  handleSortColumn: function(name, order) {
+    this.props.handleSortColumn(name, order);
+  },
+
   render: function() {
     var records = [];
     this.props.records.forEach(function(record) {
@@ -19,10 +23,28 @@ var RecordTable = React.createClass({
       <table className="table table-striped">
         <thead>
           <tr>
-            <th className="col-md-3">Title</th>
-            <th className="col-md-3">Date</th>
-            <th className="col-md-3">Amount</th>
-            <th className="col-md-3"></th>
+            <th className="col-md-3 sortable">
+              <SortColumn name="title"
+                          text="Title"
+                          sort={this.props.sort}
+                          order={this.props.order}
+                          handleSortColumn={this.handleSortColumn} />
+            </th>
+            <th className="col-md-3 sortable">
+              <SortColumn name="date"
+                          text="Date"
+                          sort={this.props.sort}
+                          order={this.props.order}
+                          handleSortColumn={this.handleSortColumn} />
+            </th>
+            <th className="col-md-3 sortable">
+              <SortColumn name="amount"
+                          text="Amount"
+                          sort={this.props.sort}
+                          order={this.props.order}
+                          handleSortColumn={this.handleSortColumn} />
+            </th>
+            <th className="col-md-2">Actions</th>
           </tr>
         </thead>
         <tbody>

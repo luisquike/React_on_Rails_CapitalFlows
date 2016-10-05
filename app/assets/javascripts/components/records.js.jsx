@@ -1,7 +1,9 @@
 var Records = React.createClass({
 
   getInitialState: function() {
-    return { records: [] };
+    return { records: [],
+             sort: "title",
+             order: "asc" };
   },
 
   componentDidMount: function() {
@@ -67,6 +69,23 @@ var Records = React.createClass({
     this.setState({ records: records });
   },
 
+  handleSortColumn: function(name, order) {
+    if (this.state.sort != name) {
+      order = 'asc';
+    }
+    $.ajax({
+      url: '/api/records',
+      data: { sort_by: name, order: order },
+      method: 'GET',
+      success: function(data) {
+        this.setState({ records: data, sort: name, order: order });
+      }.bind(this),
+      error: function(xhr, status, error) {
+        alert('Cannot sort records: ', error);
+      }
+    });
+  },
+
   render: function() {
     return(
       <div className="container">
@@ -90,8 +109,11 @@ var Records = React.createClass({
         <div className="row">
           <div className="col-md-12">
             <RecordTable records={this.state.records}
+                         sort={this.state.sort}
+                         order={this.state.order}
                          handleDeleteRecord={this.handleDeleteRecord}
-                         handleUpdateRecord={this.handleUpdateRecord} />
+                         handleUpdateRecord={this.handleUpdateRecord}
+                         handleSortColumn={this.handleSortColumn} />
           </div>
         </div>
       </div>

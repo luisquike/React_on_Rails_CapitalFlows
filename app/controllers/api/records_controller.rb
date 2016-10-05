@@ -3,7 +3,7 @@ module Api
   	before_action :set_record, only: [:update, :destroy]
 
     def index
-      render json: Record.all
+      render json: Record.order(sort_by + ' ' + order)
     end
 
     def search
@@ -43,6 +43,16 @@ module Api
 
 	def set_record
       @record = Record.find(params[:id])
+	end
+
+	def sort_by
+      %w(title
+         date
+         amount).include?(params[:sort_by]) ? params[:sort_by] : 'title'
+    end
+
+    def order
+      %w(asc desc).include?(params[:order]) ? params[:order] : 'asc'
 	end
   end
 end
