@@ -73,7 +73,7 @@ var NewForm = React.createClass({
                  value={this.state.amount}
                  onChange={this.handleChange} />
         </div>
-        <button type="submit" className="btn btn-primary">Add</button>
+        <button type="submit" className="btn btn-primary pull-right">Add</button>
       </form>
     )
   }

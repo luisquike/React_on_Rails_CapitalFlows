@@ -3,9 +3,11 @@ var Records = React.createClass({
   getInitialState: function() {
     return { records: [] };
   },
+
   componentDidMount: function() {
     this.getDataFromApi();
   },
+
   getDataFromApi: function() {
     var self = this;
     $.ajax({
@@ -18,20 +20,64 @@ var Records = React.createClass({
       }
     });
   },
+
   handleSearch: function(records) {
     this.setState({ records: records });
   },
+
   handleAdd: function(record) {
     var records = this.state.records;
     records.push(record);
     this.setState({ records: records });
   },
+
+  credits: function() {
+    var credits = this.state.records.filter(function(val) {
+      return val.amount >= 0
+    });
+    return credits.reduce(function(prev, curr) {
+      return prev + parseFloat(curr.amount);
+    }, 0)
+  },
+
+  debits: function() {
+    var debits = this.state.records.filter(function(val) {
+      return val.amount < 0
+    });
+    return debits.reduce(function(prev, curr) {
+      return prev + parseFloat(curr.amount)
+    }, 0)
+  },
+
+  balance: function() {
+    return this.debits() + this.credits();
+  },
+
+  handleDeleteRecord: function(record) {
+    var records = this.state.records.slice();
+    var index = records.indexOf(record);
+    records.splice(index, 1);
+    this.setState({ records: records });
+  },
+
+  handleUpdateRecord: function(old_record, record) {
+    var records = this.state.records.slice();
+    var index = records.indexOf(old_record);
+    records.splice(index, 1, record);
+    this.setState({ records: records });
+  },
+
   render: function() {
     return(
       <div className="container">
         <div className="jumbotron">
           <h1>React on Rails CapitalFlows</h1>
           <p>by Enrique Martz</p>
+        </div>
+        <div className='row'>
+          <AmountBox type='success' amount={this.credits()} text='Active' />
+          <AmountBox type='danger' amount={this.debits()} text='Passive' />
+          <AmountBox type='info' amount={this.balance()} text='Balance' />
         </div>
         <div className="row">
           <div className="col-md-4">
@@ -43,7 +89,9 @@ var Records = React.createClass({
         </div>
         <div className="row">
           <div className="col-md-12">
-            <RecordTable records={this.state.records} />
+            <RecordTable records={this.state.records}
+                         handleDeleteRecord={this.handleDeleteRecord}
+                         handleUpdateRecord={this.handleUpdateRecord} />
           </div>
         </div>
       </div>
